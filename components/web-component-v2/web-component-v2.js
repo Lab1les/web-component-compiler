@@ -26,49 +26,52 @@ class WebComponent extends HTMLElement {
   //init component
   constructor() {
     super();
-    let innerShadowDom = this.shadowDom;
-    innerShadowDom.innerHTML = html;
+    this.shadowDom.innerHTML = bindHtmlPropAndRex(html, propx, rex);
+  }
+
+  //element is loaded
+  connectedCallback() {
+    const shadowDom = this.shadowDom;
     //listen for rex change
     rex = new Proxy(rex, {
       set(target, property, value) {
         target[property] = value;
-        updatePropxAndRex(this.shadowDom, {
+        updateHtmlPropxAndRex(shadowDom, {
           type: "rex",
           id: property,
           value: value
         });
         return true;
       }
-    })
-  }
-
-  //element is loaded
-  connectedCallback() {
-    bindPropAndRex(this.shadowDom, propx, rex)
-    logix(this.shadowDom);
+    });
+    logix(shadowDom);
   }
 
   //listen for props change, update html
   attributeChangedCallback(propName, oldValue, newValue) {
     propx[propName] = newValue;
-    updatePropxAndRex(this.shadowDom, {
+    updateHtmlPropxAndRex(this.shadowDom, {
       type: "propx",
       id: propName,
       value: newValue
     });
   }
-
 }
 let html = await fetch(`${componentPath}/${componentName}/${componentName}.html`).then(res => res.text());
-const bindPropAndRex = (shadowDom, propx, rex) => {
-  const allElement = shadowDom.querySelectorAll("*");
-  allElement.forEach(el => console.log(el));
+const bindHtmlPropAndRex = (html, propx, rex) => {
+  let compiledHtml = html;
   Object.keys(propx).forEach(key => {
-
+    compiledHtml = compiledHtml.replace(`propx.${key}`, `<span propx-${key}>${propx[key]}</span>`)
   });
-
+  Object.keys(rex).forEach(key => {
+    compiledHtml = compiledHtml.replace(`rex.${key}`, `<span rex-${key}>${rex[key]}</span>`)
+  });
+  return compiledHtml;
 }
-const updatePropxAndRex = (shadowDom, data) => {
-
+const updateHtmlPropxAndRex = (shadowDom, data) => {
+  const elsToChange = shadowDom.querySelectorAll(`[${data.type}-${data.id}]`);
+  elsToChange.forEach(el => {
+    el.textContent = data.value;
+  })
 }
 customElements.define(componentName, WebComponent);
