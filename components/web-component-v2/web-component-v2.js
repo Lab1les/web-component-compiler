@@ -26,7 +26,8 @@ class WebComponent extends HTMLElement {
   //init component
   constructor() {
     super();
-    this.shadowDom.innerHTML = bindHtmlPropAndRex(html, propx, rex);
+    //inject first html
+    this.shadowDom.innerHTML = bindReactiveText(html, propx, rex);
   }
 
   //element is loaded
@@ -36,7 +37,7 @@ class WebComponent extends HTMLElement {
     rex = new Proxy(rex, {
       set(target, property, value) {
         target[property] = value;
-        updateHtmlPropxAndRex(shadowDom, {
+        updateReactiveText(shadowDom, {
           type: "rex",
           id: property,
           value: value
@@ -50,7 +51,7 @@ class WebComponent extends HTMLElement {
   //listen for props change, update html
   attributeChangedCallback(propName, oldValue, newValue) {
     propx[propName] = newValue;
-    updateHtmlPropxAndRex(this.shadowDom, {
+    updateReactiveText(this.shadowDom, {
       type: "propx",
       id: propName,
       value: newValue
@@ -58,7 +59,7 @@ class WebComponent extends HTMLElement {
   }
 }
 let html = await fetch(`${componentPath}/${componentName}/${componentName}.html`).then(res => res.text());
-const bindHtmlPropAndRex = (html, propx, rex) => {
+const bindReactiveText = (html, propx, rex) => {
   let compiledHtml = html;
   Object.keys(propx).forEach(key => {
     compiledHtml = compiledHtml.replace(`propx.${key}`, `<span propx-${key}>${propx[key]}</span>`)
@@ -68,9 +69,8 @@ const bindHtmlPropAndRex = (html, propx, rex) => {
   });
   return compiledHtml;
 }
-const updateHtmlPropxAndRex = (shadowDom, data) => {
-  const elsToChange = shadowDom.querySelectorAll(`[${data.type}-${data.id}]`);
-  elsToChange.forEach(el => {
+const updateReactiveText = (shadowDom, data) => {
+  shadowDom.querySelectorAll(`[${data.type}-${data.id}]`).forEach(el => {
     el.textContent = data.value;
   })
 }
