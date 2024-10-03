@@ -15,7 +15,7 @@ let rex = {
 const logix = (document) => {
   const inputText = document.querySelector("#input-text");
   const inputButton = document.querySelector("#input-button");
-  inputButton.onclick = () => { rex.textInput = inputText.value;};
+  inputButton.onclick = () => { rex.textInput = inputText.value };
 }
 
 // library functions
