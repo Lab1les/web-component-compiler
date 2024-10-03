@@ -33,7 +33,7 @@ export class WebComponent extends HTMLElement {
   //element is loaded
   connectedCallback() {
     const shadowDom = this.shadowDom;
-    //listen for rex change
+    //listen for rex change, update html text
     rex = new Proxy(rex, {
       set(target, property, value) {
         target[property] = value;
@@ -48,7 +48,7 @@ export class WebComponent extends HTMLElement {
     logix(shadowDom);
   }
 
-  //listen for props change, update html
+  //listen for props change, update html text
   attributeChangedCallback(propName, oldValue, newValue) {
     propx[propName] = newValue;
     updateReactiveText(this.shadowDom, {
@@ -59,6 +59,7 @@ export class WebComponent extends HTMLElement {
   }
 }
 let html = await fetch(`${componentPath}/${componentName}/${componentName}.html`).then(res => res.text());
+//bind propx to text element
 const bindReactiveText = (html, propx, rex) => {
   let compiledHtml = html;
   Object.keys(propx).forEach(key => {
@@ -69,6 +70,7 @@ const bindReactiveText = (html, propx, rex) => {
   });
   return compiledHtml;
 }
+//update text
 const updateReactiveText = (shadowDom, data) => {
   shadowDom.querySelectorAll(`[${data.type}-${data.id}]`).forEach(el => {
     el.textContent = data.value;
