@@ -19,7 +19,7 @@ const logix = (document) => {
 }
 
 // library functions
-class WebComponent extends HTMLElement {
+export class WebComponent extends HTMLElement {
   static observedAttributes = Object.keys(propx);
   shadowDom = this.attachShadow({ mode: "open" });
 
