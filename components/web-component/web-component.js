@@ -12,7 +12,7 @@ let rex = {
   textInput: ""
 }
 //component logic
-const logx = (document) => {
+const logix = (document) => {
   const inputText = document.querySelector("#input-text");
   const inputButton = document.querySelector("#input-button");
   inputButton.onclick = () => { rex.textInput = inputText.value;};
@@ -34,7 +34,7 @@ class WebComponent extends HTMLElement {
         target[property] = value;
         innerShadowDom.innerHTML = compileHtml();
         //rehydrate
-        logx(innerShadowDom);
+        logix(innerShadowDom);
         return true;
       }
     })
@@ -45,7 +45,7 @@ class WebComponent extends HTMLElement {
     porpx[propName] = newValue;
     this.shadowDom.innerHTML = compileHtml();
     //rehydrate
-    logx(this.shadowDom);
+    logix(this.shadowDom);
   }
 
 }
