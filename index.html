@@ -1,25 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module" src="components/web-component/web-component.js"></script>
     <script type="module" src="components/web-component-v2/web-component-v2.js"></script>
     <script type="module" src="components/timer-component/timer-component.js"></script>
-   <style>
-        body{
+    <script type="module" src="components/slot-component/slot-component.js"></script>
+    <style>
+        * {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             flex-wrap: wrap;
+        }
+        h1{
+            width: 100%;
+            text-align: center;
+        }
+        span{
+            font-size: 16px;
         }
     </style>
     <title>Web Component Test</title>
 </head>
+
 <body>
-    <web-component id="web-component" title="Test Component - v1" cta="send"></web-component>
-    <web-component-v2 id="web-component-v2" title="Test Component - v2" cta="send"/></web-component-v2>
-    <timer-component title="Timer" subtitle="this is a timer"></timer-component>
+    <h1>CompX <br> <span>web component compiler</span></h1>
+    <div>
+        <web-component id="web-component" title="Test Component - v1" cta="send"></web-component>
+        <web-component-v2 id="web-component-v2" title="Test Component - v2" cta="send" /></web-component-v2>
+    </div>
+    <div>
+        <timer-component title="Timer" subtitle="this is a timer"></timer-component>
+        <slot-component title="Slot component">
+            <span slot="slot-id">Questo testo è in uno slot</span>
+        </slot-component>
+    </div>
 </body>
+
 </html>

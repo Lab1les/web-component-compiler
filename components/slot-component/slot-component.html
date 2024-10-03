@@ -1,0 +1,25 @@
+
+<style>
+    *{
+        font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+    .flex{
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .container{
+        border-radius: 8px;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.23);
+        padding: 16px;
+        margin: 8px;
+    }
+    slot{
+        font-weight: bold;
+    }
+</style>
+<div class="container">
+    <p>propx.title</p>
+    <p><slot name="slot-id"></slot></p>
+</div>
