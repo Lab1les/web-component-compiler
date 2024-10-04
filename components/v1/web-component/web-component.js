@@ -1,6 +1,6 @@
 //component name
-const componentPath = "components";
-const componentName = "web-component-v2"
+const componentPath = "components/v1";
+const componentName = "web-component"
 
 //reactive props
 const propx = {
@@ -26,54 +26,38 @@ export class WebComponent extends HTMLElement {
   //init component
   constructor() {
     super();
-    //inject first html
-    this.shadowDom.innerHTML = bindReactiveText(html, propx, rex);
-  }
-
-  //element is loaded
-  connectedCallback() {
-    const shadowDom = this.shadowDom;
-    //listen for rex change, update html text
+    let innerShadowDom = this.shadowDom;
+    innerShadowDom.innerHTML = compileHtml();
+    //listen for rex change
     rex = new Proxy(rex, {
       set(target, property, value) {
         target[property] = value;
-        updateReactiveText(shadowDom, {
-          type: "rex",
-          id: property,
-          value: value
-        });
+        innerShadowDom.innerHTML = compileHtml();
+        //rehydrate
+        logix(innerShadowDom);
         return true;
       }
-    });
-    logix(shadowDom);
+    })
   }
 
-  //listen for props change, update html text
+  //listen for props change, update html
   attributeChangedCallback(propName, oldValue, newValue) {
     propx[propName] = newValue;
-    updateReactiveText(this.shadowDom, {
-      type: "propx",
-      id: propName,
-      value: newValue
-    });
+    this.shadowDom.innerHTML = compileHtml();
+    //rehydrate
+    logix(this.shadowDom);
   }
+
 }
 let html = await fetch(`${componentPath}/${componentName}/${componentName}.html`).then(res => res.text());
-//bind propx to text element
-const bindReactiveText = (html, propx, rex) => {
+const compileHtml = () => {
   let compiledHtml = html;
   Object.keys(propx).forEach(key => {
-    compiledHtml = compiledHtml.replace(`propx.${key}`, `<span propx-${key}>${propx[key]}</span>`)
+    compiledHtml = compiledHtml.replace(`propx.${key}`, propx[key])
   });
   Object.keys(rex).forEach(key => {
-    compiledHtml = compiledHtml.replace(`rex.${key}`, `<span rex-${key}>${rex[key]}</span>`)
+    compiledHtml = compiledHtml.replace(`rex.${key}`, rex[key])
   });
   return compiledHtml;
-}
-//update text
-const updateReactiveText = (shadowDom, data) => {
-  shadowDom.querySelectorAll(`[${data.type}-${data.id}]`).forEach(el => {
-    el.textContent = data.value;
-  })
 }
 customElements.define(componentName, WebComponent);

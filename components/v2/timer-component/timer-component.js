@@ -1,5 +1,5 @@
 //component name
-const componentPath = "components";
+const componentPath = "components/v2";
 const componentName = "timer-component"
 
 //reactive props
