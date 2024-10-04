@@ -57,7 +57,7 @@ export class WebComponent extends HTMLElement {
   //listen for props change, update html text
   attributeChangedCallback(propName, oldValue, newValue) {
     propx[propName] = newValue;
-    updateReactiveText(this.shadowDom, "props", propName, newValue);
+    updateReactiveText(this.shadowDom, "propx", propName, newValue);
   }
 }
 //bind propx to text element, add style element
@@ -71,4 +71,5 @@ const initHtml = () => {
 const updateReactiveText = (shadowDom, type, id, value) => {
   shadowDom.querySelectorAll(`[${type}-${id}]`).forEach(el => { el.textContent = value })
 }
+//register webcomponent into browser
 customElements.define(componentName, WebComponent);
