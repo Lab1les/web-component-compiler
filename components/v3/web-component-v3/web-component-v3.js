@@ -1,22 +1,27 @@
 //component name
 const componentName = "web-component-v3";
-
+let shadocx;
 //reactive props
 const propx = {
-  title: ""
+  title: "",
+  cta: ""
 }
 //reactive var
 let rex = {
+  inputValue : ""
 }
 //component logic
 const logix = () => {
-
+  $("#input-button").onclick = () => { console.log($("#input-text").value)};
 }
+
 //component html
 const html = //html
 `
 <div>
-    <p>propx.title</p>
+    <p>$propx.title</p>
+    <input id="input-text" type="text">
+    <button id="input-button">$propx.cta</button>
 </div>
 `
 //component style
@@ -35,41 +40,45 @@ export class WebComponent extends HTMLElement {
   //init component
   constructor() {
     super();
+    shadocx = this.shadowDom;
     //inject first html
-    this.shadowDom.innerHTML = initHtml();
+    initHtml();
   }
 
   //element is loaded
   connectedCallback() {
-    const shadowDom = this.shadowDom;
     //listen for rex change, update html text
     rex = new Proxy(rex, {
       set(target, property, value) {
         target[property] = value;
-        updateReactiveText(shadowDom, "rex", property, value)
+        updateReactiveText("rex", property, value)
         return true;
       }
     });
-    //hydrate and init js logic
-    logix(shadowDom);
+    logix(shadocx);
   }
 
   //listen for props change, update html text
   attributeChangedCallback(propName, oldValue, newValue) {
     propx[propName] = newValue;
-    updateReactiveText(this.shadowDom, "propx", propName, newValue);
+    updateReactiveText("propx", propName, newValue);
   }
 }
-//bind propx to text element, add style element
+//bind propx to text element, add style element, add js
 const initHtml = () => {
   let compiledHtml = html;
-  Object.keys(propx).forEach(key => { compiledHtml = compiledHtml.replace(`propx.${key}`, `<span propx-${key}>${propx[key]}</span>`) });
-  Object.keys(rex).forEach(key => { compiledHtml = compiledHtml.replace(`rex.${key}`, `<span rex-${key}>${rex[key]}</span>`) });
-  return compiledHtml + `<style>${style}</style>`;
+  Object.keys(propx).forEach(key => { compiledHtml = compiledHtml.replace(`$propx.${key}`, `<span propx-${key}>${propx[key]}</span>`) });
+  Object.keys(rex).forEach(key => { compiledHtml = compiledHtml.replace(`$rex.${key}`, `<span rex-${key}>${rex[key]}</span>`) });
+  const styleNode = document.createElement("style");
+  styleNode.textContent = style;
+  shadocx.innerHTML = compiledHtml;
+  shadocx.appendChild(styleNode);
 }
 //update text
-const updateReactiveText = (shadowDom, type, id, value) => {
-  shadowDom.querySelectorAll(`[${type}-${id}]`).forEach(el => { el.textContent = value })
+const updateReactiveText = (type, id, value) => {
+  shadocx.querySelectorAll(`[${type}-${id}]`).forEach(el => { el.textContent = value })
 }
+//jquery style get element by id
+const $ = (id) => shadocx.querySelector(id);
 //register webcomponent into browser
 customElements.define(componentName, WebComponent);
