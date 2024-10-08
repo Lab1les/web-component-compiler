@@ -11,7 +11,8 @@ let propx = {
 }
 //reactive var
 let rex = {
-  inputValue : ["ciao", "salve", "addio"]
+  inputValue : ["ciao", "salve", "addio"],
+  show : false
 }
 //component logic
 const logix = () => {
@@ -24,9 +25,7 @@ const html = //html
     <p>$propx.title</p>
     <input id="input-text" type="text">
     <button id="input-button">$propx.cta</button>
-    <!--for/value=rex.inputValue-->
-    <p>$value</p>
-    <!--/for-->
+    <p ifx="rex-show">I'm boolean </p>
 </div>
 `
 //component style
@@ -56,7 +55,8 @@ export class WebComponent extends HTMLElement {
     rex = new Proxy(rex, {
       set(target, property, value) {
         target[property] = value;
-        updateReactiveText("rex", property, value)
+        updateReactiveText("rex", property, value);
+        updateIfRender("rex");
         return true;
       }
     });
@@ -65,6 +65,7 @@ export class WebComponent extends HTMLElement {
       set(target, property, value) {
         target[property] = value;
         updateReactiveText("porpx", property, value)
+        updateIfRender("porpx");
         return true;
       }
     });
@@ -83,6 +84,7 @@ const initHtml = () => {
   Object.keys(rex).forEach(key => { compiledHtml = compiledHtml.replace(`$rex.${key}`, `<span rex-${key}>${rex[key]}</span>`) });
   compiledHtml = initForCycle(compiledHtml);
   shadocx.innerHTML = compiledHtml + `<style>${style}</style>`;
+  updateIfRender();
 }
 //update text
 const updateReactiveText = (type, id, value) => {
@@ -90,26 +92,20 @@ const updateReactiveText = (type, id, value) => {
 }
 //for cycle
 const initForCycle = (html) => {
-  const forLoopRegex = /<!--for\/[a-zA-Z0-9]{1,20}=[a-zA-Z0-9]{1,20}\.[a-zA-Z0-9]{1,20}-->([\s\S]*?)<!--\/for-->/g;
-  const forDataRegex = /[a-zA-Z0-9]{1,20}=[a-zA-Z0-9]{1,20}\.[a-zA-Z0-9]{1,20}/g;
-  const forLoopsMatch = html.match(forLoopRegex);
-  forLoopsMatch.forEach(match => {
-    const forHtmlTemplate = match.replace(/<!--([\s\S]*?)-->/g, "");
-    let newHtml = "";
-    const [key, type, id] = match.match(forDataRegex)[0].split(/[.=]/g);
-    if(type === "rex"){
-      rex[id].forEach(value => {
-        newHtml+= forHtmlTemplate.replace(`$${key}`, value);
-      })
-    }
-    if(type === "propx"){
-      propx[id].forEach(value => {
-        newHtml+= forHtmlTemplate.replace(`$${key}`, value);
-      })
-    }
-    html = html.replace(forLoopRegex, newHtml);
-  });
   return html;
+}
+//if render
+const updateIfRender = (type) => {
+  const ifElements = shadocx.querySelectorAll("[ifx]");
+  ifElements.forEach(el => {
+    const value = el.getAttribute("ifx").split("-");
+    if(value[0] === "rex"){
+      el.style.display = rex[value[1]] ? "block" : "none";
+    }
+    if(value[0] === "propx"){
+      el.style.display = propx[value[1]] ? "block" : "none";
+    }
+  })
 }
 //jquery style get element by id
 const $ = (id) => {
