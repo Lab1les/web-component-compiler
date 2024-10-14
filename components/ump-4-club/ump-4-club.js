@@ -12,8 +12,11 @@ let propx = {
 let rex = {
     showModifyButton: true,
     showAssociationButton: false,
-    showClubId: false,
-    clubId: null,
+    showClub: false,
+    club: {
+        id: "",
+        name: ""
+    },
     inputError: false,
     loading: false
 }
@@ -32,14 +35,14 @@ const logix = () => {
     const showAssociation = () => {
         rex.inputError = false;
         rex.showAssociationButton = false;
-        rex.showClubId = true,
-        rex.loading = false;
+        rex.showClub = true,
+            rex.loading = false;
     }
 
     const showNoAssociation = () => {
-        rex.clubId = null;
-        rex.showClubId = false,
-        rex.showAssociationButton = false;
+        rex.club = null;
+        rex.showClub = false,
+            rex.showAssociationButton = false;
         rex.showModifyButton = true;
         rex.loading = false;
     }
@@ -47,17 +50,16 @@ const logix = () => {
     modifyAssociationBtn.onclick = () => {
         showSetAssociation();
     };
-    setAssociationBtn.onclick = () => {
+    setAssociationBtn.onclick = async () => {
         if (!inputCardId.value) {
             rex.inputError = true;
         }
         else {
             rex.loading = true;
-            rex.clubId = inputCardId.value;
             inputCardId.value = "";
-            setTimeout(() => {
-                showAssociation();
-            }, 2000)
+            const data = await fetch("/api/data.json").then(res => res.json());
+            rex.club = data.club;
+            showAssociation();
         }
     }
     deleteAssociationBtn.onclick = () => {
@@ -68,7 +70,7 @@ const logix = () => {
     }
 }
 //component html
-const html = //html
+let html = //html
     `
 <div class="card-container">
     <div id="loading-overlay" ifx="rex.loading">
@@ -93,8 +95,8 @@ const html = //html
         <button class="cta-button" id="set-assocaition">Associa</button>
     </div>
     <!--show association-->
-    <div ifx="rex.showClubId">
-        <p>Hai associato con successo la tua Carta Fedeltà con quella di:<br><span class="club-id">$rex.clubId<span></p>
+    <div ifx="rex.showClub">
+        <p>Hai associato con successo la tua Carta Fedeltà con quella di:<br><span class="club-id">$rex.club.name<span></p>
         <div class="image"></div>
         <button class="cta-button" id="delete-associtaion">Interrompi associazione</button>
     </div>    
@@ -197,7 +199,6 @@ p{
   }
   
 `
-
 // library functions
 export class WebComponent extends HTMLElement {
     static observedAttributes = Object.keys(propx);
@@ -217,7 +218,7 @@ export class WebComponent extends HTMLElement {
         rex = new Proxy(rex, {
             set(target, property, value) {
                 target[property] = value;
-                updateReactiveText("rex", property, value);
+                cycleObject("rex", rex, [], true);
                 updateIfRender();
                 return true;
             }
@@ -241,15 +242,17 @@ export class WebComponent extends HTMLElement {
 }
 //bind propx to text element, add style element, add js
 const initHtml = () => {
-    let compiledHtml = html;
-    Object.keys(propx).forEach(key => { compiledHtml = compiledHtml.replace(`$propx.${key}`, `<span propx-${key}>${propx[key]}</span>`) });
-    Object.keys(rex).forEach(key => { compiledHtml = compiledHtml.replace(`$rex.${key}`, `<span rex-${key}>${rex[key]}</span>`) });
-    shadocx.innerHTML = compiledHtml + `<style>${style}</style>`;
+    cycleObject("propx", propx);
+    cycleObject("rex", rex);
+    shadocx.innerHTML = html + `<style>${style}</style>`;
     updateIfRender();
 }
+const compileReactiveText = (type, dotChain, dashChain, value) => {
+    html = html.replace(dotChain, `<span ${dashChain}>${value}</span>`)
+}
 //update text
-const updateReactiveText = (type, id, value) => {
-    shadocx.querySelectorAll(`[${type}-${id}]`).forEach(el => { el.textContent = value })
+const updateReactiveText = (selector, value) => {
+    shadocx.querySelectorAll(`[${selector}]`).forEach(el => { el.textContent = value })
 }
 //if render
 const updateIfRender = () => {
@@ -275,5 +278,25 @@ const $ = (id) => {
     if (id[0] === "#") return shadocx.querySelector(id);
     if (id[0] === ".") return shadocx.querySelectorAll(id);
 };
+
+const cycleObject = (type, obj, chain = [], update = false) => {
+    for (let key in obj) {
+        if (obj[key] !== null && obj[key] !== undefined) {
+            if (typeof obj[key] === 'object') {
+                chain.push(key);
+                cycleObject(type, obj[key], chain);
+            } else {
+                const dotChain = `$${type}${chain.length ? "." + chain.join(".") : ""}.${key}`;
+                const dashChain = `${type}${chain.length ? "-" + chain.join("-") : ""}-${key}`;
+                if (!update) {
+                    compileReactiveText(type, dotChain, dashChain, obj[key]);
+                }
+                else {
+                    updateReactiveText(dashChain, obj[key]);
+                }
+            }
+        }
+    }
+}
 //register webcomponent into browser
 customElements.define(componentName, WebComponent);
