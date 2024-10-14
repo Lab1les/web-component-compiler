@@ -3,7 +3,7 @@
 let shadocx;
 
 //component name
-const componentName = "ump-4-club";
+const componentName = "iframe-consumer";
 //reactive props
 let propx = {
 
@@ -44,9 +44,9 @@ const logix = () => {
         rex.loading = false;
     }
 
-    modifyAssociationBtn.onclick = () => {
-        showSetAssociation();
-    };
+    //modifyAssociationBtn.onclick = () => {
+    //    showSetAssociation();
+    //};
     setAssociationBtn.onclick = () => {
         if (!inputCardId.value) {
             rex.inputError = true;
@@ -83,7 +83,7 @@ const html = //html
         Riceveranno un credito virtuale pari al 50% dei tuoi punti.
         Fai sentire da subito il tuo supporto!</p>
         <div class="image"></div>
-        <button class="cta-button" id="modify-assocaition">Modifica</button>
+        <iframe id="iframe" src="http://127.0.0.1:5500/components/iframe/iframe.html"></iframe>
     </div>
     <!--modify association-->
     <div ifx="rex.showAssociationButton">
@@ -102,7 +102,15 @@ const html = //html
 `
 //component style
 const style = //css
-    `
+`
+iframe{
+    border: none;
+    width: 100%;
+    margin-top: 12px;
+}
+#iframe{
+    height: 36px;
+}
 #loading-overlay{
     position: absolute;
     width: 100%;
