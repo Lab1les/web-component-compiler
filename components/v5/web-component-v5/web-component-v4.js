@@ -1,3 +1,13 @@
+//component name, important for export the right compo
+// pattern must be "string-string-string..."
+const componentName = "web-component-v4.js"
+
+// css
+const css = ``
+
+// html template
+const html = ``
+
 // reactive component props
 const propx = {
 
@@ -8,11 +18,12 @@ const rex = {
 
 }
 
-// html template
-const html = ``
+// this is the component logic
+// it is called once when the component is rendered
+const logix = (shadowDom) => {
 
-// css
-const css = ``
+}
+
 
 // INIT COMPONENT
 
@@ -23,8 +34,8 @@ const css = ``
 // - populate reactive data with in html template with actual data
 // - execute conditional render funzion
 // - execture rendering loop cycle function
-
-const compileHtml = () => {
+// - inject html into shadow dom
+const compileHtml = (shadowDom) => {
 
 }
 
@@ -83,6 +94,26 @@ export class WebComponent extends HTMLElement {
     //listen for props change, update propx binded value
     attributeChangedCallback(propName, oldValue, newValue) {
         propx[propName] = newValue;
+    }
+    //element is loaded
+    connectedCallback() {
+        //inject first html
+        compileHtml(this.shadowDom);
+        //rex proxy observer
+        rex = new Proxy(rex, {
+            set(target, property, value) {
+                target[property] = value;
+                return true;
+            }
+        });
+        //propx proxy observer
+        propx = new Proxy(propx, {
+            set(target, property, value) {
+                target[property] = value;
+                return true;
+            }
+        });
+        logix(this.shadowDom);
     }
 }
 //register webcomponent into browser
