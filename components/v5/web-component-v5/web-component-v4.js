@@ -1,6 +1,6 @@
 //component name, important for export the right compo
 // pattern must be "string-string-string..."
-const componentName = "web-component-v4.js"
+const componentName = "web-component-v4"
 
 // css
 const css = ``
