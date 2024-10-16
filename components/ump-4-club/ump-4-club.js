@@ -23,7 +23,6 @@ const logix = () => {
   const modifyAssociationBtn = $("#modify-assocaition");
   const setAssociationBtn = $("#set-assocaition");
   const deleteAssociationBtn = $("#delete-associtaion");
-
   const inputCardId = $("#input-card-id");
 
   const showSetAssociation = () => {
@@ -58,7 +57,6 @@ const logix = () => {
       showAssociation();
     }
   };
-
   deleteAssociationBtn.onclick = () => {
     rex.loading = true;
     setTimeout(() => {
@@ -106,13 +104,13 @@ let html =
       </div>
     </div>
     <!--show association-->
-    <div ifx="rex.showClubId">
+    <div ifx="rex.showClub">
       <div class="card-body">
         <div class="image"></div>
         <div class="card-content">
           <h1>Associazione carta club</h1>
           <div>
-            <p>Hai associato con successo la tua Carta Fedeltà con quella di:<br><span class="club-id">$rex.clubId<span></p>
+            <p>Hai associato con successo la tua Carta Fedeltà con quella di:<br><span class="club-id">$rex.club.name<span></p>
           </div>
           <button class="cta-button" id="delete-associtaion">Interrompi associazione</button>
         </div>
