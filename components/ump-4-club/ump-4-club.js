@@ -23,6 +23,7 @@ const logix = () => {
   const modifyAssociationBtn = $("#modify-assocaition");
   const setAssociationBtn = $("#set-assocaition");
   const deleteAssociationBtn = $("#delete-associtaion");
+
   const inputCardId = $("#input-card-id");
 
   const showSetAssociation = () => {
@@ -57,12 +58,13 @@ const logix = () => {
       showAssociation();
     }
   };
-};
-deleteAssociationBtn.onclick = () => {
-  rex.loading = true;
-  setTimeout(() => {
-    showNoAssociation();
-  }, 2000);
+
+  deleteAssociationBtn.onclick = () => {
+    rex.loading = true;
+    setTimeout(() => {
+      showNoAssociation();
+    }, 2000);
+  };
 };
 
 //component html
