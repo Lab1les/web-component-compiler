@@ -82,17 +82,11 @@ const initHtml = () => {
   let compiledHtml = html;
   Object.keys(propx).forEach(key => { compiledHtml = compiledHtml.replace(`$propx.${key}`, `<span propx-${key}>${propx[key]}</span>`) });
   Object.keys(rex).forEach(key => { compiledHtml = compiledHtml.replace(`$rex.${key}`, `<span rex-${key}>${rex[key]}</span>`) });
-  compiledHtml = initForCycle(compiledHtml);
   shadocx.innerHTML = compiledHtml + `<style>${style}</style>`;
-  updateIfRender();
 }
 //update text
 const updateReactiveText = (type, id, value) => {
   shadocx.querySelectorAll(`[${type}-${id}]`).forEach(el => { el.textContent = value })
-}
-//for cycle
-const initForCycle = (html) => {
-  return html;
 }
 //if render
 const updateIfRender = (type) => {
@@ -107,7 +101,7 @@ const updateIfRender = (type) => {
     }
   })
 }
-//jquery style get element by id
+//jquery style get element/s
 const $ = (id) => {
   if(id[0] === "#") return shadocx.querySelector(id);
   if(id[0] === ".") return shadocx.querySelectorAll(id);

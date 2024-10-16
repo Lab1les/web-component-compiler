@@ -1,0 +1,40 @@
+<button id="ump-button">click me</button>
+<style>
+    button {
+        background-color: red;
+        border: none;
+        border-radius: 12px;
+        color: white;
+        padding: 6px 12px;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        margin: 0px;
+    }
+</style>
+<script>
+    const button = document.querySelector("#ump-button");
+    button.onclick = async () => {
+        const res = await fetch("https://pokeapi.co/api/v2/pokemon/ditto",
+            {
+                headers: {
+                    "x-api-key": "test"
+                }
+            }
+        ).then(res => res.json());
+        console.log(res);
+    }
+    if (window.Worker) {
+        const worker = new Worker('worker.js');
+        worker.postMessage(10);
+        worker.onmessage = function (event) {
+            console.log('Message received from worker:', event.data);
+        };
+        worker.onerror = function (error) {
+            console.error('Error in worker:', error.message);
+        };
+    }
+</script>
