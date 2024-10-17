@@ -2,6 +2,17 @@
 // DO NOT TOUCH THIS
 let shadocx;
 
+// X-API-KEY
+const X_API_KEY = "5f1f6cb5-bcd2-4f14-af4c-cdf6cd67b0b1";
+// AUTH TOKEN
+const NFS_AUTH =
+  "eyJwYXNzcG9ydCI6eyJ1c2VyIjp7ImFjY2Vzc1Rva2VuIjoiZXlKaGJHY2lPaUpTVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnpkV0lpT2lKbU4yVXhNalppTXkxak5qazNMVFJpT0RZdE9HSTNNUzB4Tnpsa05tWXhNVFEwWXpraUxDSnBjM01pT2lKb2RIUndjem92TDJGd2FTMWxkUzV3Y21Wd2NtOWtMbVJsWTJGMGFHeHZiaTV1WlhRdlkyOXVibVZqZENJc0luTnZZMmxoYkY5dmNtbG5hVzRpT25SeWRXVXNJbUYxZEdodmNtbDBhV1Z6SWpwYklsSlBURVZmVlZORlVpSmRMQ0pqYkdsbGJuUmZhV1FpT2lJek16VmpNamN5TVMwNU1UVTRMVFJoT1RrdE9UTXhZeTFqWTJWaE1qQTJZekJtWkdRaUxDSnphV1FpT2lJd04yVmpNbU5sWVMwek5tSm1MVFJpTVRNdFlqWTFPQzA0TVRrNE16STJOalpqWWpBaUxDSmhkWFJvWDNScGJXVWlPakUzTWpreE5UUTNPRGtzSW5OamIzQmxJanBiSW1GalkyOTFiblE2Y205c1pYTWlMQ0ppYVhKMGFHUmhkR1VpTENKblpXNWtaWElpTENKeWIyeGxjeUlzSW14bFoyRnNMV1Z1ZEdsMGVTSXNJbTl3ZEdsdWN5SXNJbUZqWTI5MWJuUTZjM1J2Y21VaUxDSmhZMk52ZFc1ME9tSnBjblJvWkdGMFpTSXNJbTl3ZEdsdWN6cDNjbWwwWlNJc0luQjFjbU5vWVhObGN6cDNjbWwwWlNJc0luQmxjbk52Ym1Gc1gyNTFiV0psY25NaUxDSmhZMk52ZFc1ME9uTm9hWEJ3YVc1blgyRmtaSEpsYzNNaUxDSnphR2x3Y0dsdVoxOWhaR1J5WlhOeklpd2lZV05qYjNWdWREcHdaWEp6YjI1aGJGOXVkVzFpWlhKeklpd2laVzFoYVd3aUxDSmhZMk52ZFc1ME9uQnliMlpwYkdVaUxDSmhaR1J5WlhOeklpd2laVzFoYVd3NmQzSnBkR1VpTENKemNHOXlkSE1pTENKd2RYSmphR0Z6WlhNaUxDSnZjR1Z1YVdRaUxDSmhZMk52ZFc1ME9tTnZibk5sYm5RaUxDSndjbTltYVd4bElpd2ljSFZ5WTJoaGMyVWlMQ0poWTJOdmRXNTBPbUZrWkhKbGMzTWlMQ0p6ZEc5eVpTSXNJbU52Ym5ObGJuUWlMQ0poWTJOdmRXNTBPbWRsYm1SbGNpSXNJbkJvYjI1bE9uZHlhWFJsSWl3aVlXTmpiM1Z1ZERwd2FHOXVaU0lzSW5CeWIyWnBiR1U2ZDNKcGRHVWlMQ0poWTJOdmRXNTBPbWxrWlc1MGFXWnBaWEp6SWl3aVlXTmpiM1Z1ZERwd2RYSmphR0Z6WlNJc0luQmxjbk52YmlJc0luTndiM0owY3pwM2NtbDBaU0lzSW1GalkyOTFiblE2YzNCdmNuUnpJaXdpWTI5dWRHRmpkSE1pTENKamIyNTBZV04wY3pwM2NtbDBaU0pkTENKd1pYSnpiMjVwWkNJNklqYzBNREUxTmpFNU5URTFJaXdpYkc5allYUnBiMjRpT2lKSlZDSXNJbVY0Y0NJNk1UY3lPVEUxTmpBek5Dd2lhV0YwSWpveE56STVNVFUxTVRNMExDSnFkR2tpT2lKeExYQlRkVXhhV0RkTWJtWTJha2hPWlRGbVoxcHVlbWw2TFVVaWZRLmN3MV9JNW9YNHh2MjVLYXBVLTR5NkJLX29vMkdtZXpiVWpZeExkRDdEWHBwM0FYVHU0UW1xU0NRcEJZdmdnem80YTM2eWN0SnIyeXJBSlBmempXc1E3VGRXVXl4ekJSN1lxRzA4ekprbU9GbkpxZGJHU0Znb2hVUDJDSE1oNFI2QnZta2JXUkRlV1VXdktIYWN6Q1ZFcGgtM1pHbzJsdFdCeGJSZ3Y0VXE5V21DVXl2TE00b1VBaVlvZDk5cXZhbU1aNnZvRTNObzVCVE1QSzc0MzJyMkZwNEtXSUtnQi12TFJ5a2lub3owRFdQXzVMRTB2d04zZ1lpczNwOWdGZXhrTTc2Mzd5d0pkYmlkLVZ6R21xMTVpU3RMMlJyd3BRVGpIMG0zNU5tcmNSS2pxVGNfa2ZWZXl1WUsycHUyNzNnQTlGZkExSkRfYl9FNHdtcmVCeXA5dyIsImp0aSI6ImdsZGlvZC1MNk1qTVJ5RUg2QnBUVm9RbVQxMCJ9fX0=";
+const token = JSON.parse(atob(NFS_AUTH))?.passport?.user?.accessToken;
+// BASE URL
+const baseUrl = "https://api-global.preprod.decathlon.net/ump4clubs-be/v1";
+// CARD ID
+const cardId = "2090925780611";
+
 //component name
 const componentName = "ump-4-club";
 //reactive props
@@ -46,23 +57,128 @@ const logix = () => {
   modifyAssociationBtn.onclick = () => {
     showSetAssociation();
   };
+
   setAssociationBtn.onclick = async () => {
     if (!inputCardId.value) {
       rex.inputError = true;
     } else {
       rex.loading = true;
+      const data = await setCardAssociation(cardId, inputCardId.value);
       inputCardId.value = "";
-      const data = await fetch("/api/data.json").then((res) => res.json());
       rex.club = data.club;
       showAssociation();
     }
   };
-  deleteAssociationBtn.onclick = () => {
+
+  deleteAssociationBtn.onclick = async () => {
     rex.loading = true;
-    setTimeout(() => {
-      showNoAssociation();
-    }, 2000);
+    const data = await deleteCardAssociation(cardId);
+    showNoAssociation();
   };
+
+  // get User info
+  const getCardData = async (cardId) => {
+    try {
+      const data = await fetch(`${baseUrl}/cards/${cardId}`, {
+        method: "GET",
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Authorization: `Bearer ${token}`,
+          "x-api-key": X_API_KEY,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Errore nella richiesta: " + response.status);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Risposta:", { ...data });
+          // return clubId
+          rex.club = data.club;
+          return { ...data };
+        })
+        .catch((error) => {
+          console.error("Errore:", error);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+    return {};
+  };
+
+  // SET card association
+  const setCardAssociation = async (cardId, clubId) => {
+    try {
+      const { data } = await fetch(`${baseUrl}/cards/${cardId}`, {
+        method: "PATCH",
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Authorization: `Bearer ${token}`,
+          "x-api-key": X_API_KEY,
+        },
+        body: JSON.stringify({
+          clubCountry: "it",
+          clubId: clubId,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Errore nella richiesta: " + response.status);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Risposta:", data);
+          return { ...data };
+        })
+        .catch((error) => {
+          console.error("Errore:", error);
+        });
+
+      return { ...data };
+    } catch (error) {
+      console.error(error);
+    }
+    return {};
+  };
+
+  // DELETE card association
+  const deleteCardAssociation = async (cardId) => {
+    try {
+      const { data } = await fetch(`${baseUrl}/cards/${cardId}`, {
+        method: "PATCH",
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Authorization: `Bearer ${token}`,
+          "x-api-key": X_API_KEY,
+        },
+        body: JSON.stringify({
+          clubCountry: null,
+          clubId: null,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Errore nella richiesta: " + response.status);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Risposta:", data);
+          return { ...data };
+        })
+        .catch((error) => {
+          console.error("Errore:", error);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+    return {};
+  };
+
+  getCardData(cardId);
 };
 
 //component html
@@ -296,6 +412,7 @@ export class WebComponent extends HTMLElement {
     propx[propName] = newValue;
   }
 }
+
 //bind propx to text element, add style element, add js
 const initHtml = () => {
   cycleObject("propx", propx);
